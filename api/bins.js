@@ -4,11 +4,13 @@ import path from "path";
 export default async function handler(req, res) {
   const filePath = path.join(process.cwd(), "bins.json");
 
+  // GET → return all bins
   if (req.method === "GET") {
-    const data = JSON.parse(await fs.readFile(filePath));
+    const data = JSON.parse(await fs.readFile(filePath, "utf8"));
     return res.status(200).json(data);
   }
 
+  // POST → create a new bin
   if (req.method === "POST") {
     let body = "";
 
@@ -16,7 +18,8 @@ export default async function handler(req, res) {
     req.on("end", async () => {
       const { title, text } = JSON.parse(body);
 
-      const data = JSON.parse(await fs.readFile(filePath));
+      const data = JSON.parse(await fs.readFile(filePath, "utf8"));
+
       const newBin = {
         id: Date.now().toString(),
         title,
@@ -33,5 +36,5 @@ export default async function handler(req, res) {
     return;
   }
 
-  res.status(405).json({ error: "Method Not Allowed" });
-}
+  return res.status(405).json({ error: "Method Not Allowed" });
+}}
