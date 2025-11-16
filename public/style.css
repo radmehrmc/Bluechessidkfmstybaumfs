@@ -1,40 +1,91 @@
+:root {
+  --bg: #0d1117;
+  --fg: #ffffff;
+  --card: #161b22;
+}
+
+.light {
+  --bg: #ffffff;
+  --fg: #000000;
+  --card: #eaeaea;
+}
+
 body {
-    margin: 0;
-    background: #111;
-    color: #fff;
-    font-family: "Inter", sans-serif;
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Inter, sans-serif;
 }
 
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #222;
+  background: var(--card);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-h2, h3 {
-    margin: 0;
+button {
+  background: #222;
+  color: var(--fg);
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-h3 {
-    font-size: 24px;
+#container {
+  display: flex;
+  height: calc(100vh - 60px);
 }
 
-.btn {
-    padding: 8px 16px;
-    background: #fff;
-    color: #000;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 4px;
+#binsList {
+  width: 250px;
+  background: var(--card);
+  border-right: 1px solid #333;
+  overflow-y: auto;
 }
 
-.container {
-    padding: 20px;
-    max-width: 900px;
-    margin: auto;
+.binItem {
+  padding: 12px;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+}
+
+.binItem:hover {
+  background: #222;
+}
+
+#binView {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+#modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(6px);
+}
+
+.modal-box {
+  background: var(--card);
+  padding: 20px;
+  width: 400px;
+  border-radius: 10px;
+}
+
+input, textarea {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background: #111;
+  color: var(--fg);
+  border: none;
+}    margin: auto;
 }
 
 .bin-item {
