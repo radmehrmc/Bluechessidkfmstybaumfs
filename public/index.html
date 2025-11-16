@@ -1,1 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Bin</title>
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            color: #fff;
+            font-family: "Inter", sans-serif;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #222;
+        }
+        .btn {
+            padding: 8px 16px;
+            background: #fff;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        .container {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+        .bin-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #222;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+        }
+        .modal.active {
+            visibility: visible;
+        }
+        .modal-content {
+            background: #111;
+            padding: 20px;
+            width: 400px;
+            border-radius: 6px;
+            border: 1px solid #222;
+        }
+        input, textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #000;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
 
+<header>
+    <h2>Public Bin</h2>
+    <button class="btn" onclick="openModal()">Create Bin</button>
+</header>
+
+<div class="container">
+    <h3>Bins</h3>
+    <div id="binList"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <h3>Create New Bin</h3>
+        <input id="subject" placeholder="Subject" />
+        <textarea id="content" rows="6" placeholder="Content"></textarea>
+        <button class="btn" onclick="publishBin()">Publish</button>
+    </div>
+</div>
+
+<script>
+    // Fetch bins from backend
+    async function loadBins() {
+        const response = await fetch('/api/bins');
+        const bins = await response.json();
+
+        const binList = document.getElementById('binList');
+        binList.innerHTML = '';
+        
+        bins.forEach(bin => {
+            const div = document.createElement('div');
+            div.className = 'bin-item';
+            div.innerText = bin.subject;
+            div.onclick = () => showBin(bin);
+            binList.appendChild(div);
+        });
+    }
+
+    // Show bin content
+    function showBin(bin) {
+        alert(`Subject: ${bin.subject}\n\n${bin.content}`);
+    }
+
+    // Open modal
+    function openModal() {
+        document.getElementById('modal').classList.add('active');
+    }
+
+    // Close modal
+    function closeModal() {
+        document.getElementById('modal').classList.remove('active');
+    }
+
+    // Publish bin to backend
+    async function publishBin() {
+        const subject = document.getElementById('subject').value;
+        const content = document.getElementById('content').value;
+
+        if (!subject || !content) {
+            return alert("Fill everything!");
+        }
+
+        const response = await fetch('/api/bins', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ subject, content }),
+        });
+
+        const newBin = await response.json();
+        if (response.ok) {
+            alert('Bin Published!');
+            closeModal();
+            loadBins();
+        } else {
+            alert('Error publishing bin');
+        }
+    }
+
+    // Initial load of bins
+    loadBins();
+</script>
+
+</body>
+</html>
